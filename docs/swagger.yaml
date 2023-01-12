@@ -1,0 +1,637 @@
+definitions:
+  controllers.CreateProductCategoryInput:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - description
+    - name
+    type: object
+  controllers.CreateProductInput:
+    properties:
+      description:
+        type: string
+      img_url:
+        type: string
+      name:
+        type: string
+    required:
+    - description
+    - img_url
+    - name
+    type: object
+  controllers.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controllers.RegisterInput:
+    properties:
+      birth_date:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+      sex:
+        type: boolean
+    required:
+    - birth_date
+    - email
+    - first_name
+    - last_name
+    - password
+    - sex
+    type: object
+  controllers.TransactionDetailInput:
+    properties:
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+    required:
+    - product_id
+    - quantity
+    type: object
+  controllers.TransactionDetailOutput:
+    properties:
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+      transaction_id:
+        type: integer
+    type: object
+  controllers.TransactionInput:
+    properties:
+      admin_id:
+        type: integer
+      transaction_details:
+        items:
+          $ref: '#/definitions/controllers.TransactionDetailInput'
+        type: array
+      transaction_type:
+        type: boolean
+    required:
+    - admin_id
+    - transaction_details
+    - transaction_type
+    type: object
+  controllers.TransactionOutput:
+    properties:
+      admin_id:
+        type: integer
+      transaction_details:
+        items:
+          $ref: '#/definitions/controllers.TransactionDetailOutput'
+        type: array
+      transaction_type:
+        type: boolean
+    type: object
+  controllers.UpdateProductCategoryInput:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  controllers.UpdateProductInput:
+    properties:
+      description:
+        type: string
+      img_url:
+        type: string
+      name:
+        type: string
+    type: object
+  controllers.UpdateProfileInput:
+    properties:
+      birth_date:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      img_url:
+        type: string
+      name:
+        type: string
+      product_category_id:
+        type: integer
+      stock:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.ProductCategory:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      product:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  models.Transaction:
+    properties:
+      admin_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      transaction_details:
+        items:
+          $ref: '#/definitions/models.TransactionDetail'
+        type: array
+      transaction_type:
+        type: boolean
+      updated_at:
+        type: string
+    type: object
+  models.TransactionDetail:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+      transaction_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /login:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles.
+      parameters:
+      - description: the body to login a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login with credential.
+      tags:
+      - Auth
+  /logout:
+    post:
+      description: Logout.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Logout.
+      tags:
+      - Auth
+  /product-categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all product categories.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductCategory'
+            type: array
+      security:
+      - BearerToken: []
+      summary: Get all product categories.
+      tags:
+      - ProductCategory
+    post:
+      consumes:
+      - application/json
+      description: Create a product category.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ProductCategory
+        in: body
+        name: productCategory
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateProductCategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+      security:
+      - BearerToken: []
+      summary: Create a product category.
+      tags:
+      - ProductCategory
+  /product-categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product category.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ProductCategory ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - BearerToken: []
+      summary: Delete a product category.
+      tags:
+      - ProductCategory
+    get:
+      consumes:
+      - application/json
+      description: Get a product category.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ProductCategory ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+      security:
+      - BearerToken: []
+      summary: Get a product category.
+      tags:
+      - ProductCategory
+    put:
+      consumes:
+      - application/json
+      description: Update a product category.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ProductCategory ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ProductCategory
+        in: body
+        name: productCategory
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateProductCategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+      security:
+      - BearerToken: []
+      summary: Update a product category.
+      tags:
+      - ProductCategory
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+      summary: Get all products.
+      tags:
+      - Product
+    post:
+      consumes:
+      - application/json
+      description: Create a product.
+      parameters:
+      - description: Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: Create a product.
+      tags:
+      - Product
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete a product.
+      tags:
+      - Product
+    get:
+      consumes:
+      - application/json
+      description: Get a product.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: Get a product.
+      tags:
+      - Product
+    put:
+      consumes:
+      - application/json
+      description: Update a product.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: Update a product.
+      tags:
+      - Product
+  /profile:
+    get:
+      description: Get user profile.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user profile.
+      tags:
+      - Admin
+    put:
+      description: Update user profile.
+      parameters:
+      - description: the body to update user profile
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateProfileInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update user profile.
+      tags:
+      - Admin
+  /profile/:id:
+    delete:
+      description: Delete user profile.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete user profile.
+      tags:
+      - Admin
+  /register:
+    post:
+      description: Register a new user.
+      parameters:
+      - description: the body to register a new user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerToken: []
+      summary: Register a new user.
+      tags:
+      - Admin
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - BearerToken: []
+      summary: Get all transactions.
+      tags:
+      - Transaction
+    post:
+      consumes:
+      - application/json
+      description: Create a transaction.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TransactionInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.TransactionOutput'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Create a transaction.
+      tags:
+      - Transaction
+  /user/all:
+    get:
+      description: Get all users.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all users.
+      tags:
+      - Admin
+swagger: "2.0"
