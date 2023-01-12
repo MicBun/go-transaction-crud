@@ -13,7 +13,7 @@ func ConnectDataBase() *gorm.DB {
 	username := utils.GetEnv("DB_USERNAME", "myuser")
 	password := utils.GetEnv("DB_PASSWORD", "mypassword")
 	host := utils.GetEnv("DB_HOST", "tcp(mysql:3306)")
-	database := utils.GetEnv("DB_DATABASE", "activity_tracking")
+	database := utils.GetEnv("DB_DATABASE", "transaction_crud")
 	dsn := username + ":" + password + "@" + host + "/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	////////

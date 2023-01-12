@@ -5,7 +5,7 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: activity_tracking
+      MYSQL_DATABASE: transaction_crud
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     ports:
